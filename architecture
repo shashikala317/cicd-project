@@ -1,0 +1,132 @@
+# CI/CD Pipeline using Jenkins, Docker, GitHub, and AWS EC2
+
+## Project Architecture
+
+```text
++-------------+
+| Developer   |
++-------------+
+       |
+       | git push
+       v
++-------------+
+|   GitHub    |
+| Repository  |
++-------------+
+       |
+       | Webhook Trigger
+       v
++-------------+
+|   Jenkins   |
+| (AWS EC2)   |
++-------------+
+       |
+       | Clone Source Code
+       v
++-------------+
+| Build Stage |
+| Docker Build|
++-------------+
+       |
+       | Create Docker Image
+       v
++-------------+
+| Docker Image|
+|  cicd-app   |
++-------------+
+       |
+       | Deploy Stage
+       v
++-------------+
+| Docker      |
+| Container   |
++-------------+
+       |
+       | Port 80
+       v
++-------------+
+| Web Browser |
+| Application |
++-------------+
+```
+
+## Workflow
+
+### Step 1: Code Development
+
+The developer creates or modifies application code and pushes changes to the GitHub repository.
+
+### Step 2: GitHub Webhook Trigger
+
+A GitHub webhook automatically sends a notification to Jenkins whenever new code is pushed to the repository.
+
+### Step 3: Jenkins Pipeline Execution
+
+Jenkins receives the webhook request and starts the CI/CD pipeline automatically.
+
+### Step 4: Source Code Checkout
+
+Jenkins clones the latest source code from the GitHub repository.
+
+### Step 5: Docker Image Build
+
+Jenkins executes the Docker build command:
+
+```bash
+docker build -t cicd-app:latest .
+```
+
+A new Docker image is created from the Dockerfile.
+
+### Step 6: Container Deployment
+
+Jenkins stops and removes the existing container (if present) and deploys a new container using the latest image.
+
+```bash
+docker stop cicd-container || true
+docker rm cicd-container || true
+docker run -d -p 80:80 --name cicd-container cicd-app:latest
+```
+
+### Step 7: Application Access
+
+The application becomes available through the AWS EC2 Public IP on port 80.
+
+```text
+http://EC2-PUBLIC-IP
+```
+
+## AWS Services Used
+
+* Amazon EC2
+* Security Groups
+* Elastic IP (Optional)
+
+## DevOps Tools Used
+
+* Git
+* GitHub
+* Jenkins
+* Docker
+* Linux
+
+## CI/CD Pipeline Benefits
+
+* Automated Build Process
+* Automated Deployment
+* Reduced Manual Effort
+* Faster Software Delivery
+* Consistent Deployment Environment
+* Continuous Integration
+* Continuous Deployment
+
+## Pipeline Stages
+
+1. Checkout Source Code
+2. Build Docker Image
+3. Deploy Docker Container
+4. Verify Application Availability
+
+## Project Outcome
+
+Successfully implemented an end-to-end CI/CD pipeline that automatically builds and deploys a Dockerized web application on AWS EC2 whenever code is pushed to GitHub.
